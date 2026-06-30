@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NutriScore Checkout Tool</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      width: 320px;
+      color: #1e293b;
+      background-color: #f8fafc;
+    }
+    .header {
+      background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+      color: white;
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+    .header p {
+      margin: 4px 0 0 0;
+      font-size: 11px;
+      opacity: 0.9;
+    }
+    .content {
+      padding: 16px;
+    }
+    .stats-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .stat-val {
+      font-size: 24px;
+      font-weight: 800;
+      color: #047857;
+    }
+    .stat-lbl {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #64748b;
+      letter-spacing: 0.5px;
+    }
+    .grade-badge {
+      display: inline-block;
+      width: 38px;
+      height: 38px;
+      line-height: 38px;
+      text-align: center;
+      border-radius: 50%;
+      font-weight: 900;
+      font-size: 20px;
+      color: white;
+    }
+    .badge-A { background-color: #008246; }
+    .badge-B { background-color: #3cb371; }
+    .badge-C { background-color: #ffcc00; color: #111111; }
+    .badge-D { background-color: #ff6600; }
+    .badge-E { background-color: #e63b2e; }
+
+    .items-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .scanned-list {
+      max-height: 180px;
+      overflow-y: auto;
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+    }
+    .scanned-item {
+      background: #ffffff;
+      border: 1px solid #f1f5f9;
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+    .item-name {
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 190px;
+      color: #0f172a;
+    }
+    .item-retailer {
+      font-size: 10px;
+      color: #94a3b8;
+    }
+    .item-grade {
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      text-align: center;
+      border-radius: 4px;
+      color: white;
+      font-weight: bold;
+      font-size: 11px;
+    }
+    .btn-action {
+      background-color: #0f172a;
+      color: white;
+      border: none;
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      text-align: center;
+      display: block;
+      box-shadow: 0 4px 6px -1px rgba(15,23,42,0.2);
+      transition: background 0.15s;
+      text-decoration: none;
+      margin-top: 10px;
+    }
+    .btn-action:hover {
+      background-color: #1e293b;
+    }
+    .empty-state {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 12px;
+      padding: 24px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>NutriScore Checkout Tool</h1>
+    <p>Guiding Healthy Swaps in Kenyan Groceries</p>
+  </div>
+  <div class="content">
+    <div class="stats-card">
+      <div>
+        <div class="stat-lbl">Basket Health</div>
+        <div class="stat-val" id="avg-score">--</div>
+      </div>
+      <div>
+        <div id="avg-grade" class="grade-badge badge-C">C</div>
+      </div>
+    </div>
+
+    <div class="items-title" id="items-header">Scanned Products (0)</div>
+    <ul class="scanned-list" id="scanned-list">
+      <div class="empty-state">No product scans in this session.<br>Visit Carrefour, Naivas, or Jumia to start.</div>
+    </ul>
+
+    <a href="#" id="open-dashboard" class="btn-action">📊 Open Trends Dashboard</a>
+    <button id="clear-scans-btn" style="background: none; border: none; color: #94a3b8; font-size: 10px; text-decoration: underline; margin-top: 12px; cursor: pointer; width: 100%; text-align: center;">Reset Scan Log</button>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

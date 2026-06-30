@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "NutriScore Checkout Tool (Kenya)",
+  "version": "1.0.0",
+  "description": "Scrapes and evaluates product ingredients, calculating official Nutri-Scores with healthier alternatives directly inside Kenyan online grocery stores.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://*.naivas.online/*",
+    "*://*.naivas.co.ke/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.naivas.online/*",
+        "*://*.naivas.co.ke/*"
+      ],
+      "js": [
+        "adapters/naivas.js",
+        "content.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon.svg",
+      "48": "icons/icon.svg",
+      "128": "icons/icon.svg"
+    }
+  },
+  "options_page": "dashboard.html",
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "dashboard.html",
+        "db.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
+}
