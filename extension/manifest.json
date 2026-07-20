@@ -10,7 +10,8 @@
   ],
   "host_permissions": [
     "*://*.naivas.online/*",
-    "*://*.naivas.co.ke/*"
+    "*://*.naivas.co.ke/*",
+    "https://world.openfoodfacts.org/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -18,11 +19,11 @@
   "content_scripts": [
     {
       "matches": [
-        "*://*.naivas.online/*",
-        "*://*.naivas.co.ke/*"
+        "<all_urls>"
       ],
       "js": [
         "adapters/naivas.js",
+        "adapters/generic.js",
         "content.js"
       ],
       "run_at": "document_end"

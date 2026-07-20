@@ -16,9 +16,10 @@ const AlternativesEngine = {
 
     const targetCategory = targetProduct.fsaCategory;
     const targetScore = targetProduct.score;
+    const safeProducts = Array.isArray(allProductsDb) ? allProductsDb : [];
 
     // Filter strictly by same FSA category
-    let validAlts = allProductsDb.filter(prod => 
+    let validAlts = safeProducts.filter(prod => 
       prod.fsaCategory === targetCategory && 
       prod.productId !== targetProduct.productId
     );

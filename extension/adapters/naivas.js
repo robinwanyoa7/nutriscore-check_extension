@@ -8,60 +8,71 @@ const NaivasAdapter = {
     return "NAIVAS";
   },
 
+  hashText(value) {
+    return Array.from(String(value || ""))
+      .reduce((acc, char) => ((acc << 5) - acc + char.charCodeAt(0)) | 0, 0)
+      .toString(16);
+  },
+
   detectProducts() {
     const products = [];
-    const productSelector = "[class*='border-naivas-bg'], .product-item";
-    const nameSelector = "span.line-clamp-2, [class*='line-clamp'], .product-item-name a, a[href*='.html'], h3, h4";
-    const priceSelector = "span[class*='text-naivas-green'], .product-price, .price-box .price, .price";
-    const categorySelector = ".category-description, .items.breadcrumbs, .breadcrumb, .page-title-wrapper";
-    
-    // Category extraction
-    let categoryText = "";
-    document.querySelectorAll(categorySelector).forEach(el => {
-      categoryText += " " + (el?.textContent?.trim() || "");
+
+    if (!window.location.pathname.includes("/cart")) {
+      return products;
+    }
+
+    const cartSelectors = [
+      ".flex.gap-6.items-center.w-10\\/12",
+      ".cart-item",
+      "[data-testid='cart-item']",
+      ".items-center"
+    ];
+
+    const cartItemNodes = cartSelectors.flatMap((selector) =>
+      Array.from(document.querySelectorAll(selector))
+    );
+
+    const uniqueItems = cartItemNodes.filter((item, index, arr) => {
+      return arr.indexOf(item) === index;
     });
-    const pageCategory = categoryText.toLowerCase();
 
-    const cards = document.querySelectorAll(productSelector);
+    uniqueItems.forEach((item) => {
+      if (item.hasAttribute("data-nutriscore-scanned")) return;
 
-    cards.forEach((card) => {
-      if (card.hasAttribute("data-nutriscore-scanned")) return;
+      const nameEl = item.querySelector(
+        'a[wire\\:click^="redirectToProductPage"][title], a[title], a[href*="/product/"]'
+      );
 
-      const nameEl = card.querySelector(nameSelector);
-      let name = nameEl?.textContent?.trim() || "";
-      if (!name && nameEl?.tagName?.toLowerCase() === 'a') {
-        name = nameEl?.getAttribute("title") || nameEl?.getAttribute("aria-label") || "";
-      }
+      if (!nameEl) return;
 
+      const name = nameEl.getAttribute("title") || nameEl.textContent.trim();
       if (!name) return;
 
-      let priceNumeric = 0;
-      const priceEl = card.querySelector(priceSelector);
-      if (priceEl) {
-        let priceText = priceEl?.textContent?.trim() || "";
-        priceNumeric = parseFloat(priceText.replace(/[^0-9.]/g, "")) || 0;
-      }
-
-      const id = card.getAttribute("data-product-id") || card.getAttribute("data-sku") || null;
-      const hash = card.getAttribute("data-original-hash") || null;
+      const priceEl = item.querySelector(".font-extrabold, .price, [data-testid='price']");
+      const price = parseFloat(
+        (priceEl?.textContent || "0").replace(/[^0-9.]/g, "")
+      );
 
       products.push({
-        domElement: card,
-        id: id,
-        name: name,
-        nameHash: hash,
-        price: priceNumeric,
-        scrapedCategory: pageCategory
+        domElement: item,
+        name,
+        price,
+        nameHash: this.hashText(name),
+        domElementRef: item
       });
     });
 
+    console.log("[NutriScore] Cart Products:", products);
     return products;
   },
 
   injectBadge(card, productResult, price) {
-    // 1. Create a container division
+    if (card.querySelector(".nutriscore-badge")) {
+      return;
+    }
+
     const badgeContainer = document.createElement("div");
-    badgeContainer.className = "nutriscore-isolated-root";
+    badgeContainer.className = "nutriscore-isolated-root nutriscore-badge";
     badgeContainer.style.position = "absolute";
     badgeContainer.style.top = "8px";
     badgeContainer.style.left = "8px";
